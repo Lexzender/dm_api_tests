@@ -22,7 +22,7 @@ def get_activation_token_by_login(
     return token
 
 
-def test_post_v1_account():
+def test_put_v1_account_token():
     account_api = AccountApi(
         host='http://185.185.143.231:5051'
     )
