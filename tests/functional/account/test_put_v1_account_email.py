@@ -1,7 +1,7 @@
 from api_mailhog.apis.mailhog_api import MailhogApi
 from dm_api_account.apis.account_api import AccountApi
 from dm_api_account.apis.login_api import LoginApi
-from tests.functional.post_v1_account.test_post_v1_account import (
+from tests.functional.account.test_post_v1_account import (
     get_activation_token_by_login,
     fake
 )
