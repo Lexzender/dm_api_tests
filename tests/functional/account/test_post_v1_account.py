@@ -53,7 +53,9 @@ def test_post_v1_account():
         email=email,
         password=password
         )
-    account_helper.user_login(
+    response = account_helper.user_login(
         login=login,
         password=password
         )
+
+    assert response.status_code == 200, "Пользователь не смог авторизоваться"

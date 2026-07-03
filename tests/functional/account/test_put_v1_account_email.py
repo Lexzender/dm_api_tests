@@ -51,10 +51,11 @@ def test_change_email():
         email=email,
         password=password
     )
-    account_helper.user_login(
+    response = account_helper.user_login(
         login=login,
         password=password
     )
+    assert response.status_code == 200, "Пользователь не смог авторизоваться"
     # сменить email
     account_helper.change_email(
         login=login,
@@ -62,17 +63,13 @@ def test_change_email():
         password=password
     )
 
-    account_helper.user_login_with_old_credentials(
+    response = account_helper.user_login(
         login=login,
         password=password
     )
+    assert response.status_code == 403, "Пользователь смог авторизоваться"
 
-    account_helper.change_email(
-        login=login,
-        email=email,
-        password=password,
-        activate=True
-    )
+    account_helper.activate_user(login=login)
 
     account_helper.user_login(
         login=login,
