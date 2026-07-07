@@ -147,7 +147,7 @@ class AccountHelper:
             self,
             login,
             email
-            ):
+    ):
         json_data = {
             'login': login,
             'email': email
@@ -163,9 +163,9 @@ class AccountHelper:
             old_password,
             new_password,
     ):
-        self.reset_password(login,email)
+        self.reset_password(login, email)
         token = self.get_activation_token_by_login(
-            login,change_password=True
+            login, change_password=True
         )
         assert token is not None, f'Токен для пользователя {login}, не был получен'
 
@@ -182,13 +182,13 @@ class AccountHelper:
 
     def logout_current_user(
             self
-            ):
+    ):
         response = self.dm_account_api.account_api.delete_v1_account_login()
         assert response.status_code == 204, "Не удалось выйти из текущей УЗ"
 
     def logout_all_device(
             self
-            ):
+    ):
         response = self.dm_account_api.account_api.delete_v1_account_login_all()
         assert response.status_code == 204, "Не удалось выйти со всех устройств"
 
