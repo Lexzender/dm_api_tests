@@ -7,11 +7,11 @@ from services.dm_api_account import DMApiAccount
 
 def retrier(
         function
-        ):
+):
     def wrapper(
             *args,
             **kwargs
-            ):
+    ):
         token = None
         count = 0
         while token is None:
@@ -46,7 +46,7 @@ class AccountHelper:
                 "login": login,
                 "password": password
             }
-            )
+        )
         assert response.status_code == 200, "Пользователь не смог авторизоваться"
 
         token = {
@@ -143,7 +143,11 @@ class AccountHelper:
 
         assert response.status_code == 200, "Пользователь не был активирован"
 
-    def reset_password(self, login,email):
+    def reset_password(
+            self,
+            login,
+            email
+            ):
         json_data = {
             'login': login,
             'email': email
@@ -155,12 +159,13 @@ class AccountHelper:
     def change_password(
             self,
             login,
+            email,
             old_password,
             new_password,
     ):
-        time.sleep(1)
+        self.reset_password(login,email)
         token = self.get_activation_token_by_login(
-            login,
+            login,change_password=True
         )
         assert token is not None, f'Токен для пользователя {login}, не был получен'
 
@@ -175,11 +180,15 @@ class AccountHelper:
 
         assert response.status_code == 200, "Не удалось иземенить пароль"
 
-    def logout_current_user(self):
+    def logout_current_user(
+            self
+            ):
         response = self.dm_account_api.account_api.delete_v1_account_login()
         assert response.status_code == 204, "Не удалось выйти из текущей УЗ"
 
-    def logout_all_device(self):
+    def logout_all_device(
+            self
+            ):
         response = self.dm_account_api.account_api.delete_v1_account_login_all()
         assert response.status_code == 204, "Не удалось выйти со всех устройств"
 
@@ -187,6 +196,7 @@ class AccountHelper:
     def get_activation_token_by_login(
             self,
             login,
+            change_password=False
     ):
         token = None
         response = self.mailhog.mailhog_api.get_api_v2_messages()
@@ -195,16 +205,14 @@ class AccountHelper:
         for item in response.json()["items"]:
             user_data = loads(item["Content"]["Body"])
             user_login = user_data['Login']
-            if user_login == login:
-                try:
-                    # Пробуем получить токен из ConfirmationLinkUrl
-                    token = user_data["ConfirmationLinkUrl"].split('/')[-1]
-                except KeyError:
-                    # Если ключа нет, используем ConfirmationLinkUri
-                    token = user_data["ConfirmationLinkUri"].split('/')[-1]
-                print(
-                    f"Токен для логина {user_login}:",
-                    token
-                )
+            if user_login == login and change_password == False:
+                token = user_data["ConfirmationLinkUrl"].split('/')[-1]
+
+            if user_login == login and change_password == True:
+                token = user_data["ConfirmationLinkUri"].split('/')[-1]
+            print(
+                f"Токен для логина {user_login}:",
+                token
+            )
             break
         return token

@@ -17,13 +17,9 @@ def test_put_v1_password(account_helper,prepare_user):
 
     assert response.status_code == 200, "Пользователь не смог авторизоваться"
 
-    account_helper.reset_password(
-        login=login,
-        email=email
-        )
-
     account_helper.change_password(
         login=login,
+        email=email,
         old_password=password,
         new_password=new_password
     )
