@@ -23,7 +23,7 @@ class AccountApi(RestClient):
     def put_v1_account_token(
             self,
             token
-            ):
+    ):
         """
         Activate registered user
         :param token:
@@ -36,7 +36,7 @@ class AccountApi(RestClient):
         response = self.put(
             path=f'/v1/account/{token}',
             headers=headers
-            )
+        )
         return response
 
     def put_v1_account_email(
@@ -54,3 +54,70 @@ class AccountApi(RestClient):
             json=json_data
         )
         return response
+
+    def get_v1_account(
+            self,
+            **kwargs
+    ):
+        """
+        Get current user
+        :return:
+        """
+        response = self.get(
+            path=f'/v1/account',
+            **kwargs
+        )
+        return response
+
+    def post_v1_password(
+            self,
+            json_data
+    ):
+        """
+        Reset registered user password
+        :return:
+        """
+        response = self.post(
+            path=f'/v1/account/password',
+            json=json_data
+        )
+        return response
+
+    def put_v1_password(
+            self,
+            json_data
+    ):
+        """
+        Change registered user password
+        :return:
+        """
+        response = self.put(
+            path=f'/v1/account/password',
+            json=json_data
+        )
+        return response
+
+    def delete_v1_account_login(
+            self
+            ):
+        """
+        Logout as current user
+        :return:
+         """
+        response = self.delete(
+            path=f'/v1/account/login'
+        )
+        return response
+
+    def delete_v1_account_login_all(
+            self
+            ):
+        """
+        Logout from every device
+        :return:
+         """
+        response = self.delete(
+            path=f'/v1/account/login/all'
+        )
+        return response
+
