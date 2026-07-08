@@ -101,14 +101,14 @@ class AccountHelper:
             self,
             login: str,
             password: str,
-            email: str,
-            activate: bool = False
+            new_email: str,
+            activate: bool = False,
     ):
 
         json_data = {
             'login': login,
             'password': password,
-            'email': f'R{email}'
+            'email': new_email
         }
 
         response = self.dm_account_api.account_api.put_v1_account_email(json_data=json_data)

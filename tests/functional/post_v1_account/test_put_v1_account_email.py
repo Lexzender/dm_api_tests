@@ -2,6 +2,7 @@ def test_change_email(account_helper, prepare_user):
     login = prepare_user.login
     password = prepare_user.password
     email = prepare_user.email
+    new_email = "new"+email
 
     account_helper.register_new_user(
         login=login,
@@ -16,7 +17,7 @@ def test_change_email(account_helper, prepare_user):
     # сменить email
     account_helper.change_email(
         login=login,
-        email=email,
+        new_email=new_email,
         password=password
     )
 
