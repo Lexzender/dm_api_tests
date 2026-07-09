@@ -24,7 +24,7 @@ def test_change_email(account_helper, prepare_user):
         password=password
     )
     with check_status_code_http(403, "User is inactive. Address the technical support for more details"):
-        response = account_helper.user_login(
+            account_helper.user_login(
             login=login,
             password=password
     )
