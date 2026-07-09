@@ -102,6 +102,8 @@ class AccountHelper:
             login_credentials=login_credentials,
             validate_response=validate_response
         )
+        if validate_headers:
+            assert response.headers["x-dm-auth-token"], "Токен для пользователя не был получен"
         return response
 
     def change_email(
