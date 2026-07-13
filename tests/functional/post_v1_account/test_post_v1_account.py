@@ -1,18 +1,12 @@
-from datetime import datetime
-
 import allure
 import pytest
-from hamcrest import (
-    assert_that,
-    has_property,
-    starts_with,
-    all_of,
-    instance_of,
-    has_properties,
-    equal_to
-)
+
 
 from checkers.http_checkers import check_status_code_http
+from checkers.post_v1_account import PostV1Account
+
+
+
 @allure.suite("Тесты на проверку метода POST v1/account")
 @allure.sub_suite("Позитивные тесты")
 class TestsPostV1Account:
@@ -35,46 +29,29 @@ class TestsPostV1Account:
             login=login,
             password=password,
             validate_response=True
-        )
-        #todo вынести в метод и повесить алюр шаг
-        assert_that(
-            response, all_of(
-                has_property("resource", has_property("login", starts_with("Kostromin"))),
-                has_property("resource", has_property("registration", instance_of(datetime))),
-                has_property(
-                    "resource", has_properties(
-                        {
-                            "rating": has_properties(
-                                {
-                                    "enabled": equal_to(True),
-                                    "quality": equal_to(0),
-                                    "quantity": equal_to(0),
-                                }
-                            )
-                        }
-                    )
-                )
-            )
-        )
+    )
 
-    @pytest.mark.parametrize(
-        "login, password, email", [
-            pytest.param("test_user", "short", "test@mail.com", id="Short_password"),
-            pytest.param("test_user", "123456789", "testmail.com", id="invalid_email"),
-            pytest.param("u", "123456789", "test@mail.com", id="invalid_login")
-        ]
-        )
-    def test_not_create_user_with_invalid_params(
-            self,
-            account_helper,
-            prepare_user,
-            login,
-            password,
-            email
-    ):
-        with check_status_code_http(400, "Validation failed"):
-            account_helper.register_new_user(
-                login=login,
-                email=email,
-                password=password
-            )
+        PostV1Account.check_response_values(response)
+
+
+
+@allure.sub_suite("Негативные тесты")
+@pytest.mark.parametrize("login, password, email", [
+    pytest.param("test_user", "short", "test@mail.com", id="Short_password"),
+    pytest.param("test_user", "123456789", "testmail.com", id="invalid_email"),
+    pytest.param("u", "123456789", "test@mail.com", id="invalid_login")
+])
+def test_not_create_user_with_invalid_params(
+        account_helper,
+        prepare_user,
+        login,
+        password,
+        email
+):
+
+    with check_status_code_http(400, "Validation failed"):
+        account_helper.register_new_user(
+            login=login,
+            email=email,
+            password=password
+    )
