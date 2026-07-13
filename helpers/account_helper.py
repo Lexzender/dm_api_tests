@@ -89,7 +89,8 @@ class AccountHelper:
             login: str,
             password: str,
             remember_me: bool = True,
-            validate_response: bool = False
+            validate_response: bool = False,
+            validate_headers: bool = False,
     ):
         login_credentials = LoginCredentials(
             login=login,
