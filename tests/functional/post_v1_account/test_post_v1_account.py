@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import pytest
 from hamcrest import (
     assert_that,
     has_property,
@@ -9,6 +10,8 @@ from hamcrest import (
     has_properties,
     equal_to
 )
+
+from checkers.http_checkers import check_status_code_http
 
 
 def test_post_v1_account(
@@ -48,4 +51,26 @@ def test_post_v1_account(
                 )
             )
         )
+    )
+
+
+
+@pytest.mark.parametrize("login, password, email", [
+    pytest.param("test_user", "short", "test@mail.com", id="Short_password"),
+    pytest.param("test_user", "123456789", "testmail.com", id="invalid_email"),
+    pytest.param("u", "123456789", "test@mail.com", id="invalid_login")
+])
+def test_not_create_user_with_invalid_params(
+        account_helper,
+        prepare_user,
+        login,
+        password,
+        email
+):
+
+    with check_status_code_http(400, "Validation failed"):
+        account_helper.register_new_user(
+            login=login,
+            email=email,
+            password=password
     )
