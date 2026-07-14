@@ -1,3 +1,4 @@
+import allure
 from hamcrest import (assert_that)
 from assertpy import (
     assert_that,
@@ -15,7 +16,8 @@ class GetV1Account:
             cls,
             response
             ):
-        with soft_assertions():
-            assert_that(response.resource.login).is_equal_to('Kostromin_05_07_2026_13_44_28'),
-            assert_that(response.resource.online).is_instance_of(datetime),
-            assert_that(response.resource.roles).contains(UserRole.GUEST, UserRole.PLAYER)
+        with allure.step("Проверка ответа метода 'get_v1_account'"):
+            with soft_assertions():
+                assert_that(response.resource.login).is_equal_to('Kostromin_05_07_2026_13_44_28'),
+                assert_that(response.resource.online).is_instance_of(datetime),
+                assert_that(response.resource.roles).contains(UserRole.GUEST, UserRole.PLAYER)

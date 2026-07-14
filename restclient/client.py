@@ -7,6 +7,7 @@ from requests import (
 )
 
 from restclient.configuration import Configuration
+from restclient.utilities import allure_attach
 
 
 class RestClient:
@@ -64,6 +65,7 @@ class RestClient:
                                   **kwargs
                                   )
 
+    @allure_attach
     def _send_request(
             self,
             method,
