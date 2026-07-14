@@ -53,15 +53,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: allure-results
-          # Не указываем path, чтобы сохранить в текущую директорию
+          path: ./allure-results
 
       - name: List downloaded results (debug)
-        run: ls -la allure-results/
+        run: ls -la ./allure-results/
 
       - name: Generate Allure report
         run: |
-          allure generate allure-results -o _site --clean
-          # или используйте: allure generate -c allure-results -o _site
+          allure generate ./allure-results -o _site --clean
 
       - name: List generated report (debug)
         run: ls -la _site/
