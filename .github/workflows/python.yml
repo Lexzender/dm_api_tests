@@ -27,9 +27,6 @@ jobs:
           pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
 
-      - name: List allure results (debug)
-        run: ls -la allure-results/
-
       - name: Archive allure results
         uses: actions/upload-artifact@v4
         with:
@@ -55,15 +52,9 @@ jobs:
           name: allure-results
           path: ./allure-results
 
-      - name: List downloaded results (debug)
-        run: ls -la ./allure-results/
-
       - name: Generate Allure report
         run: |
           allure generate ./allure-results -o _site --clean
-
-      - name: List generated report (debug)
-        run: ls -la _site/
 
       - name: Store report
         uses: actions/upload-artifact@v4
@@ -83,9 +74,6 @@ jobs:
           name: report-site
           path: _site
 
-      - name: List downloaded report (debug)
-        run: ls -la _site/
-
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -94,3 +82,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - run: echo "https://lexzender.github.io/dm_api_tests/"
