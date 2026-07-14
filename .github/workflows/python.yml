@@ -46,11 +46,13 @@ jobs:
       - run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && sudo tar -xvzf allure-2.29.0.tgz -C /opt/ && sudo ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure
       - name: Download allure results
         uses: actions/download-artifact@v4
-      - run: allure generate -c allure-results -0 _site
+        with:
+          name: allure-results
+      - run: allure generate -c allure-results -o _site
       - name: Store report
         uses: actions/upload-artifact@v4
         with:
-          name: _site
+          name: report-site
           path: _site
           retention-days: 1
 
@@ -59,11 +61,15 @@ jobs:
     needs: generate-report
     name: Publish report
     steps:
-      - uses: actions/checkout@v4
       - name: Download site report
         uses: actions/download-artifact@v4
+        with:
+          name: report-site
+          path: _site
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
