@@ -27,6 +27,9 @@ jobs:
           pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
 
+      - name: List allure results (debug)
+        run: ls -la allure-results/
+
       - name: Archive allure results
         uses: actions/upload-artifact@v4
         with:
@@ -43,12 +46,26 @@ jobs:
         with:
           distribution: "microsoft"
           java-version: "17"
+
       - run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && sudo tar -xvzf allure-2.29.0.tgz -C /opt/ && sudo ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure
+
       - name: Download allure results
         uses: actions/download-artifact@v4
         with:
           name: allure-results
-      - run: allure generate -c allure-results -o _site
+          # Не указываем path, чтобы сохранить в текущую директорию
+
+      - name: List downloaded results (debug)
+        run: ls -la allure-results/
+
+      - name: Generate Allure report
+        run: |
+          allure generate allure-results -o _site --clean
+          # или используйте: allure generate -c allure-results -o _site
+
+      - name: List generated report (debug)
+        run: ls -la _site/
+
       - name: Store report
         uses: actions/upload-artifact@v4
         with:
@@ -66,11 +83,15 @@ jobs:
         with:
           name: report-site
           path: _site
+
+      - name: List downloaded report (debug)
+        run: ls -la _site/
+
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      - run: echo "https://lexzender.github.io/dm_api_tests/"
